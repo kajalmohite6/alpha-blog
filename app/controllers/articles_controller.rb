@@ -1,4 +1,6 @@
 class ArticlesController < ApplicationController
+  # filters -  runs before defined actions
+  before_action :find_article , only: [:edit, :update, :show]
 
   def index
     @articles = Article.all
@@ -22,11 +24,9 @@ class ArticlesController < ApplicationController
   end
 
   def edit
-    @article  = Article.find(params[:id])
   end
 
   def update
-    @article  = Article.find(params[:id])
     if @article.update(article_params)
       flash[:notice] = "Artcle is updated successfully!"
       redirect_to article_path(@article)
@@ -37,12 +37,15 @@ class ArticlesController < ApplicationController
 
 
   def show
-    @article = Article.find(params[:id])
   end
 
 
   private
   def article_params
     params.require(:article).permit(:title,:description)
+  end
+
+  def find_article
+    @article  = Article.find(params[:id])
   end
 end
